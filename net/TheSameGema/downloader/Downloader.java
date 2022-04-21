@@ -8,9 +8,38 @@ import java.io.InputStreamReader;
 
 public class Downloader {
 
-    public static void downloadAndConvert(String watchID) throws IOException {
+    public static void downloadWithYtDpl(String watchID, String title, String artist, boolean log) throws IOException {
+        String udlExec = "PATH TO yt-dpl.exe";
+        String cmd = udlExec+" -x --audio-format mp3 --audio-quality 0 https://www.youtube.com/watch?v=" + watchID;
 
-        String udlExec = "HERE-YOUR-PATH-T0-YOUTUBE-DL.EXE";
+        Process p = Runtime.getRuntime().exec(cmd);
+
+        BufferedReader bf = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+            while (true) {
+                String newLine = bf.readLine();
+                if (log) {
+                    log(newLine);
+                }
+                if (newLine == null) break;
+                //[download] 100.0%
+            }
+
+        bf.close();
+
+         File tmpAudioFile = new File(artist + " - " + title + " [" + watchID + "].mp3");
+         File path = new File(System.getProperty("user.home") + "/Music/"+"/"+watchID+".mp3");
+         tmpAudioFile.renameTo(path);
+
+        if (log) {
+            log("File saved " + path);
+        }
+    }
+
+
+    public static void downloadWithYoutubeDl(String watchID, boolean log) throws IOException {
+
+        String udlExec = "PATH TO youtube-dl.exe";
 
         //update youtube-dl
         try {
@@ -25,25 +54,28 @@ public class Downloader {
 
         BufferedReader bf = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
-        while(true)
-        {
-            String newLine = bf.readLine();
-            log(newLine);
-            if(newLine == null) break;
-            //[download] 100.0%
 
-        }
+            while (true) {
+                String newLine = bf.readLine();
+                if (log) {
+                    log(newLine);
+                }
+                if (newLine == null) break;
+                //[download] 100.0%
+            }
 
         bf.close();
 
         File tmpAudioFile = new File("audioDownload.mp3");
         File path = new File(System.getProperty("user.home") + "/Music/"+"/"+watchID+".mp3");
         tmpAudioFile.renameTo(path);
+        
 
-        log("File saved " + path);
-
+        if (log) {
+            log("File saved " + path);
+        }
     }
-
+    
     private static void log(String text) {
         System.out.println(text);
     }
