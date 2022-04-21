@@ -2,4 +2,4 @@
 
 See usage in Example.java
 
-All you need add path to youtube dl(yt-dpl) in code. 
+All you need add path to youtube dl (yt-dpl) in code. 
